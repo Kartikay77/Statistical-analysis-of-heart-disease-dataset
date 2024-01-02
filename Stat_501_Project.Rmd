@@ -1,0 +1,263 @@
+---
+title: "Stat501_Project"
+author: "Kartikay Gupta, Aaditree Jaisswal, Pranchal Agarwal, Jash Mitesh Dalal"
+date: "2023-12-07"
+output:
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r Heart disease}
+library(ggplot2)
+library(caret)#FOR SVM
+library(dplyr)
+library(ISLR)#FOR DESICION TREE
+library(tidyverse)
+library(broom)
+library(rstatix)
+library(corrgram)
+```
+
+
+```{r Heart disease 1}
+df<-read.csv("C:/Users/Dell/Desktop/HeartHealthPrediction-master/heart.csv")
+df$Thal<-factor(df$Thal,levels =c("fixed","normal","reversable"),labels =  c(0,1,2))
+```
+
+
+```{r Heart disease 2}
+df$ChestPain<-factor(df$ChestPain,levels=c("typical","asymptomatic","nonanginal","nontypical"),labels =  c(0,1,2,3))
+```
+
+HEATMAP: To perform correlation analysis to show the dependency of different factors on the
+presence of heart disease. Strong colour gradient in the heatmap indicate the factors that would be more influential in the prediction versus those that are light coloured would not have as much influence.
+
+```{r Heart disease 3}
+x_matrix<- data.matrix(df)
+x_heatmap<- heatmap(x_matrix, Rowv=NA, Colv=NA, scale="column", margins=c(5,10))
+```
+
+
+```{r Heart disease}
+```
+
+Make more visually appealing.
+```{r Heart disease 4}
+x_heatmap<- heatmap(x_matrix, Rowv=NA, Colv=NA, col = cm.colors(256),scale="column", margins=c(5,10))
+```
+
+
+```{r Heart disease 5}
+summary(df)
+```
+
+
+```{r Heart disease 6}
+sum(is.na(df))
+```
+
+
+```{r Heart disease 7}
+df[is.na(df)] = 0
+```
+
+
+```{r Heart disease 8}
+```
+
+
+```{r Heart disease 9}
+pairs(df,lower.panel=NULL)
+```
+
+
+```{r Heart disease 10}
+plot(x = df$Age,y = df$MaxHR,
+     xlab = "Age",
+     ylab = "MaxHeartRate",
+     xlim = c(20,100),
+     ylim = c(50,200),		 
+     main = "Age vs MaxHeartRate",
+     pch=0:1
+     
+     
+)
+points(df$Age[df$Target=='0'],df$MaxHR[df$Target=='0'],col="blue")
+points(df$Age[df$Target=='1'],df$MaxHR[df$Target=='1'],col="red")
+legend("topright",legend = c("Disease","No Disease"), col = c("red","blue"),pch = 0:1)
+```
+
+
+```{r Heart disease 11}
+corrgram(df)
+```
+
+
+```{r Heart disease 12}
+boxplot(df)
+```
+
+
+```{r Heart disease 13}
+str(df)
+```
+
+
+```{r Heart disease 14}
+df[df$Sex == 0,]$Sex <- "F"
+df[df$Sex == 1,]$Sex <- "M"
+df$Sex<- as.factor(df$Sex)
+df$ChestPain<- as.factor(df$ChestPain)
+df$Fbs<- as.factor(df$Fbs)
+df$RestECG<- as.factor(df$RestECG)
+df$ExAng<- as.factor(df$ExAng)
+df$Slope<-as.factor(df$Slope)
+df$Thal<-as.factor(df$Thal)
+df$Target<-ifelse(test=df$Target == 0, yes="Healthy" , no="Unhealthy")
+df$Target<- as.factor(df$Target)
+str(df)
+```
+
+
+```{r Heart disease 15}
+xtabs(~ Target + Sex , data = df)
+xtabs(~ Target + ChestPain , data = df)
+xtabs(~ Target + Fbs , data = df)
+xtabs(~ Target + RestECG , data = df)
+```
+
+
+```{r Heart disease 16}
+# 1. Simple Linear Regression (SLR)
+# Example: Age vs. Cholesterol
+slr_model <- lm(df$Chol ~ df$Age, data = df)
+summary(slr_model)  # Check the regression summary
+plot(df$Age, df$Chol, main = "Scatterplot: Age vs. Cholesterol", xlab = "Age", ylab = "Cholesterol")
+abline(slr_model, col = "red")  # Add regression line to scatterplot
+```
+
+
+```{r Heart disease 17}
+# 2. Chi-Square Test for Independence
+# Example: Chest Pain Type vs. Heart Disease Presence
+chi_sq <- chisq.test(df$ChestPain, df$Target)
+chi_sq  # Check the chi-square test result
+# Create side-by-side bar chart
+ggplot(df, aes(x = ChestPain, fill = factor(Target))) +
+  geom_bar(position = "dodge") +
+  labs(title = "Chest Pain vs. Heart Disease", x = "Chest Pain", y = "Count") +
+  theme_minimal()
+```
+
+
+```{r Heart disease 18}
+# 3. Estimating Population Mean with Confidence Interval
+# Example: Blood Pressure
+blood_pressure_ci <- t.test(df$RestBP)
+blood_pressure_ci  # Check confidence interval
+```
+
+
+```{r Heart disease 19}
+# 4. Estimating Population Proportion with Confidence Interval
+# Convert 'Healthy' and 'Unhealthy' to numeric (e.g., 0 and 1)
+df$Target <- ifelse(df$Target == "Healthy", 0, 1)
+# Check the 'Target' column after conversion
+head(df$Target)
+# Perform the proportion test for the presence of heart disease
+heart_disease_prop <- prop.test(sum(df$Target), length(df$Target))
+heart_disease_prop
+```
+
+
+```{r Heart disease 20}
+# 5. Estimating Difference Between Population Means with Confidence Interval
+# Example: Cholesterol levels between gender
+chol_gender_ci <- t.test(Chol ~ Sex, data = df)
+chol_gender_ci  # Check confidence interval
+```
+
+
+```{r Heart disease 21}
+# 6. Estimating Difference Between Population Proportions with Confidence Interval
+# Example: Heart Disease presence between gender
+str(df$Target)
+str(df$Sex)
+unique(df$Target)
+unique(df$Sex)
+# Create a contingency table
+contingency_table <- table(df$Target, df$Sex)
+# Perform the proportion test for heart disease presence between genders
+heart_disease_gender_prop <- prop.test(contingency_table)
+heart_disease_gender_prop
+```
+```{r}
+names(df)  # Check column names
+levels(df$Sex)  # Check levels of the 'Sex' variable
+
+```
+
+
+```{r Heart disease 22}
+# 7. Hypothesis Testing about Population Parameters
+# Example: Hypothesis test for mean cholesterol levels
+# 1. Population Mean Hypothesis Test - Serum Cholesterol
+# Null Hypothesis: Population mean serum cholesterol = 246 mg/dl
+# Alternative Hypothesis: Average age with heart disease $\neq$ Average age without heart disease
+# Convert 'Chol' to numeric
+df$Chol <- as.numeric(df$Chol)
+
+# Plot histogram for serum cholesterol
+ggplot(df, aes(x = Chol)) +
+  geom_histogram(binwidth = 10, fill = "skyblue", color = "black") +
+  geom_vline(xintercept = 246, linetype = "dashed", color = "red", size = 1) +
+  labs(title = "Serum Cholesterol Distribution",
+       x = "Serum Cholesterol (mg/dl)", y = "Frequency")
+# 2. Population Proportion Hypothesis Test - Gender
+# Null Hypothesis: Proportion of males = 0.5 (50%)
+# Alternative Hypothesis: Proportion of males $\neq$ 0.5
+df$Sex <- factor(df$Sex, labels = c("Female", "Male"))
+ggplot(df, aes(x = Sex)) +
+  geom_bar(fill = "lightgreen", color = "black") +
+  labs(title = "Proportion of Males and Females", x = "Sex", y = "Count")
+# 3. Difference Between Population Means Hypothesis Test - Age and Heart Disease
+# Null Hypothesis: Average age with heart disease = Average age without heart disease
+# Alternative Hypothesis: Average age with heart disease $\neq$ Average age without heart disease
+
+ggplot(df, aes(x = factor(Target), y = Age, fill = factor(Target))) +
+  geom_boxplot() +
+  labs(title = "Comparison of Age Distribution",
+       x = "Diagnosis (0 = No Heart Disease, 1 = Heart Disease)", y = "Age")
+
+# 4. Difference Between Population Proportions Hypothesis Test - Fasting Blood Sugar and Heart Disease
+# Null Hypothesis: Proportion of high fasting blood sugar is the same for populations with and without heart disease
+# Alternative Hypothesis: Proportion of high fasting blood sugar differs between populations
+
+ggplot(df, aes(x = factor(Target), fill = factor(Fbs))) +
+  geom_bar(position = "fill") +
+  labs(title = "Proportion of High Fasting Blood Sugar",
+       x = "Diagnosis (0 = No Heart Disease, 1 = Heart Disease)", y = "Proportion")
+```
+
+
+```{r Heart disease 23}
+# 8. Analysis of Variance (ANOVA)
+# Example: ANOVA for blood pressure among different chest pain types
+anova_model <- aov(RestBP ~ ChestPain, data = df)
+summary(anova_model)  # Check ANOVA summary
+# Check assumptions and perform post-hoc tests
+plot(anova_model)
+posthoc <- TukeyHSD(anova_model)
+print(posthoc)
+
+```
