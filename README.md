@@ -11,4 +11,72 @@
    7.3 Difference Between PopulationMeans Hypothesis Test - Age and Heart Disease
    7.4 Difference Between Population Proportions Hypothesis Test - Fasting Blood Sugar and Heart Disease
 8. Analysis of Variance (ANOVA) Results
-   
+
+## Project Overview
+This project performs complete statistical analysis on the UCI Heart Disease dataset, including:
+1. Simple Linear Regression (Age vs Cholesterol)
+2. Chi-square test (ChestPain vs Target)
+3. Confidence Intervals for:
+   - Population Mean (Blood Pressure)
+   - Population Proportion
+4. Difference in Means & Proportions
+5. Hypothesis Testing:
+   - Serum Cholesterol (Population Mean Test)
+   - Gender (Population Proportion Test)
+   - Age vs Heart Disease (Two-sample Mean Test)
+   - Fasting Blood Sugar (Two-sample Proportion Test)
+6. ANOVA for Resting Blood Pressure across Chest Pain categories
+7. Full set of visualizations generated using R
+
+---
+
+## Key Visualizations
+
+### Correlation Heatmap  
+![Heatmap](https://github.com/Kartikay77/Statistical-analysis-of-heart-disease-dataset/blob/main/corrgram.png)
+
+### Chest Pain vs Heart Disease  
+![ChestPain_vs_HeartDisease](https://github.com/Kartikay77/Statistical-analysis-of-heart-disease-dataset/blob/main/cp_vs_count_hd.png)
+
+### Gender Distribution  
+![GenderStats](https://github.com/Kartikay77/Statistical-analysis-of-heart-disease-dataset/blob/main/gender_stats_barplot.png)
+
+### Age Distribution (Healthy vs Heart Disease)
+![AgeBoxplot](https://github.com/Kartikay77/Statistical-analysis-of-heart-disease-dataset/blob/main/boxplot_age.png)
+
+### Age vs Max Heart Rate  
+![MaxHR_vs_Age](https://github.com/Kartikay77/Statistical-analysis-of-heart-disease-dataset/blob/main/maxhr_vs_age.png)
+
+### ANOVA – Residuals vs Fitted  
+![ANOVA_Plot](https://github.com/Kartikay77/Statistical-analysis-of-heart-disease-dataset/blob/main/anova_plot.png)
+
+---
+
+## Files
+- `Stat_501_Project.Rmd` — Full RMarkdown Analysis  
+- `.png` files — All generated plots  
+- `README.md` — Documentation  
+
+---
+
+## How to Run
+```bash
+git clone https://github.com/Kartikay77/Statistical-analysis-of-heart-disease-dataset
+cd Statistical-analysis-of-heart-disease-dataset
+
+# Open RStudio and knit the Rmd:
+open Stat_501_Project.Rmd
+```
+
+---
+## Insights Summary
+Chest Pain type shows strong association with heart disease (Chi-square).
+Age is significantly higher among heart-disease patients.
+Serum Cholesterol deviates significantly from hypothesized mean.
+Gender shows higher male prevalence for heart disease.
+ANOVA shows Chest Pain affects RestBP distributions.
+
+---
+
+Dataset Source
+UCI Machine Learning Repository — Heart Disease Dataset
