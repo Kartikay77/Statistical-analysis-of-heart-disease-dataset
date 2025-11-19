@@ -12,6 +12,18 @@
    7.4 Difference Between Population Proportions Hypothesis Test - Fasting Blood Sugar and Heart Disease
 8. Analysis of Variance (ANOVA) Results
 
+# Overview
+This project explores the UCI Heart Disease dataset using classical statistical techniques.  
+It applies regression, hypothesis testing, confidence intervals, and ANOVA  
+to identify factors strongly associated with heart disease risk.
+
+## Tools Used
+- R, RMarkdown  
+- ggplot2, corrgram  
+- Base R statistical tests (t-tests, ANOVA, Chi-square)  
+- dplyr for data wrangling  
+
+
 ## Project Overview
 This project performs complete statistical analysis on the UCI Heart Disease dataset, including:
 1. Simple Linear Regression (Age vs Cholesterol)
@@ -79,4 +91,5 @@ ANOVA shows Chest Pain affects RestBP distributions.
 ---
 
 Dataset Source
-UCI Machine Learning Repository — Heart Disease Dataset
+UCI Machine Learning Repository Heart Disease Dataset
+https://archive.ics.uci.edu/ml/datasets/Heart+Disease
